@@ -157,6 +157,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
             debug('In after of #Create: after get: enrollment record etag: ' + enrollmentForCreateTest.etag);
             debug('In after of #Create: just before delete: getResult - ' + JSON.stringify(getResult));
             testConfiguration.deleteFunction(getResult, function(err) {
+              debug('In after of #Create: just AFTER delete invocation: getResult - ' + JSON.stringify(getResult));
               if (err) {
                 debug(err);
               }
@@ -199,6 +200,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
       it(testConfiguration.testDescription, function(callback) {
         debug('In IT for #Delete - enrollmentForDeleteTest is: ' + JSON.stringify(enrollmentForDeleteTest));
         testConfiguration.deleteFunction(enrollmentForDeleteTest[testConfiguration.idPropertyName], enrollmentForDeleteTest.etag, function(err) {
+          debug('In IT for #Delete - after delete invocation - enrollmentForDeleteTest is: ' + JSON.stringify(enrollmentForDeleteTest));
           if (err) {
             debug(err);
           }
@@ -228,6 +230,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
       after(function(done) {
         debug('In after of #Update - enrollmentReturnedFromUpdate is: ' + JSON.stringify(enrollmentReturnedFromUpdate));
         testConfiguration.deleteFunction(enrollmentReturnedFromUpdate, function(err) {
+          debug('In after for #update after delete invocation for enrollmentReturnedFromUpdate: ' + JSON.stringify(enrollmentReturnedFromUpdate));
           if (err) {
             debug(err);
           }
@@ -270,6 +273,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
       after(function(done) {
         debug('in after of #getAttest - enrollmentToVerify to be deleted is: ' + JSON.stringify(enrollmentToVerify));
         testConfiguration.deleteFunction(enrollmentToVerify, function(err) {
+          debug('in after of #getAttest AFTER delete invocation - enrollmentToVerify deleted is: ' + JSON.stringify(enrollmentToVerify));
           if (err) {
             debug(err);
           }
