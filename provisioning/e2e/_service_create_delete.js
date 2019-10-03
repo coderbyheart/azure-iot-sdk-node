@@ -208,7 +208,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
     describe('#Update', function() {
       var enrollmentReturnedFromUpdate = {};
       var enrollmentToUpdate = {};
-      before(function(done) {
+      beforeEach(function(done) {
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
@@ -218,7 +218,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
           done();
         });
       });
-      after(function(done) {
+      afterEach(function(done) {
         testConfiguration.deleteFunction(enrollmentReturnedFromUpdate, function(err) {
           if (err) {
             debug(err);
@@ -228,7 +228,6 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       it(testConfiguration.testDescription, function(callback) {
-        enrollmentReturnedFromUpdate = {};
         enrollmentToUpdate.provisioningStatus = 'disabled';
         testConfiguration.updateFunction(enrollmentToUpdate, function(err, updatedEnrollment) {
           if (err) {
@@ -243,8 +242,8 @@ describe('Provisioning Service Client: CRUD operations', function () {
     });
 
     describe('#getAttestationMechanism', function () {
-      var enrollmentToVerify;
-      before(function(done) {
+      var enrollmentToVerify = {};
+      beforeEach(function(done) {
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
@@ -254,7 +253,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
           done();
         });
       });
-      after(function(done) {
+      afterEach(function(done) {
         testConfiguration.deleteFunction(enrollmentToVerify, function(err) {
           if (err) {
             debug(err);
