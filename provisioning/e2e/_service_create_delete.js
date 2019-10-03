@@ -146,14 +146,14 @@ describe('Provisioning Service Client: CRUD operations', function () {
   ];
   testSpecification.forEach(function(testConfiguration) {
     describe('#Create', function() {
-      var enrollmentToDelete = {};
+      var enrollmentForCreateTest = {};
       after(function(done) {
-        debug('before get: enrollment record etag: ' + enrollmentToDelete.etag);
-        testConfiguration.getFunction(enrollmentToDelete[testConfiguration.idPropertyName], function (err, getResult) {
+        debug('before get: enrollment record etag: ' + enrollmentForCreateTest.etag);
+        testConfiguration.getFunction(enrollmentForCreateTest[testConfiguration.idPropertyName], function (err, getResult) {
           if (err) {
             debug(err);
           } else {
-            debug('after get: enrollment record etag: ' + enrollmentToDelete.etag);
+            debug('after get: enrollment record etag: ' + enrollmentForCreateTest.etag);
             testConfiguration.deleteFunction(getResult, function(err) {
               if (err) {
                 debug(err);
@@ -165,13 +165,13 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       it(testConfiguration.testDescription, function(callback) {
-        enrollmentToDelete = {};
+        enrollmentForCreateTest = {};
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err,'Should be no error from the create');
-          enrollmentToDelete = returnedEnrollment;
+          enrollmentForCreateTest = returnedEnrollment;
           callback();
         });
       });
@@ -180,24 +180,24 @@ describe('Provisioning Service Client: CRUD operations', function () {
 
   testSpecification.forEach(function(testConfiguration) {
     describe('#Delete', function() {
-      var enrollmentToDelete = {};
+      var enrollmentForDeleteTest = {};
       before(function(done) {
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Should be no error from the BEFORE create');
-          enrollmentToDelete = returnedEnrollment;
+          enrollmentForDeleteTest = returnedEnrollment;
           done();
         });
       });
       it(testConfiguration.testDescription, function(callback) {
-        testConfiguration.deleteFunction(enrollmentToDelete[testConfiguration.idPropertyName], enrollmentToDelete.etag, function(err) {
+        testConfiguration.deleteFunction(enrollmentForDeleteTest[testConfiguration.idPropertyName], enrollmentForDeleteTest.etag, function(err) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Non null response from the delete.');
-          enrollmentToDelete = {};
+          enrollmentForDeleteTest = {};
           callback();
         });
       });
@@ -206,7 +206,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
 
   testSpecification.forEach(function(testConfiguration) {
     describe('#Update', function() {
-      var enrollmentToDelete = {};
+      var enrollmentReturnedFromUpdate = {};
       var enrollmentToUpdate = {};
       before(function(done) {
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
@@ -219,7 +219,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       after(function(done) {
-        testConfiguration.deleteFunction(enrollmentToDelete, function(err) {
+        testConfiguration.deleteFunction(enrollmentReturnedFromUpdate, function(err) {
           if (err) {
             debug(err);
           }
@@ -228,15 +228,15 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       it(testConfiguration.testDescription, function(callback) {
-        enrollmentToDelete = {};
+        enrollmentReturnedFromUpdate = {};
         enrollmentToUpdate.provisioningStatus = 'disabled';
         testConfiguration.updateFunction(enrollmentToUpdate, function(err, updatedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err);
-          assert.equal(updatedEnrollment.provisioningStatus, 'disabled', 'provsioning state not disabled');
-          enrollmentToDelete = updatedEnrollment;
+          assert.equal(updatedEnrollment.provisioningStatus, 'disabled', 'provisioning state not disabled');
+          enrollmentReturnedFromUpdate = updatedEnrollment;
           callback();
         });
       });
