@@ -146,14 +146,16 @@ describe('Provisioning Service Client: CRUD operations', function () {
   ];
   testSpecification.forEach(function(testConfiguration) {
     describe('#Create', function() {
-      var enrollmentForCreateTest = {};
-      after(function(done) {
-        debug('before get: enrollment record etag: ' + enrollmentForCreateTest.etag);
+      let enrollmentForCreateTest = {};
+      afterEach(function(done) {
+        debug('In afterEach of #Create: before get: enrollment record etag: ' + enrollmentForCreateTest.etag);
+        debug('In afterEach of #Create: before get: entire enrollment record' + JSON.stringify(enrollmentForCreateTest));
         testConfiguration.getFunction(enrollmentForCreateTest[testConfiguration.idPropertyName], function (err, getResult) {
           if (err) {
             debug(err);
           } else {
-            debug('after get: enrollment record etag: ' + enrollmentForCreateTest.etag);
+            debug('In afterEach of #Create: after get: enrollment record etag: ' + enrollmentForCreateTest.etag);
+            debug('In afterEach of #Create: just before delete: getResult - ' + JSON.stringify(getResult));
             testConfiguration.deleteFunction(getResult, function(err) {
               if (err) {
                 debug(err);
@@ -165,11 +167,11 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       it(testConfiguration.testDescription, function(callback) {
-        enrollmentForCreateTest = {};
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
+          debug('In #Create after Create - returned enrollment is: ' + JSON.stringify(returnedEnrollment));
           assert.isNull(err,'Should be no error from the create');
           enrollmentForCreateTest = returnedEnrollment;
           callback();
@@ -180,24 +182,26 @@ describe('Provisioning Service Client: CRUD operations', function () {
 
   testSpecification.forEach(function(testConfiguration) {
     describe('#Delete', function() {
-      var enrollmentForDeleteTest = {};
-      before(function(done) {
+      let enrollmentForDeleteTest = {};
+      beforeEach(function(done) {
+        debug('In beforeEach for #delete - config enrollmentObject is: ' + JSON.stringify(testConfiguration.enrollmentObject));
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Should be no error from the BEFORE create');
+          debug('In beforeEach for #delete - returnedEnrollment is: ' + JSON.stringify(returnedEnrollment));
           enrollmentForDeleteTest = returnedEnrollment;
           done();
         });
       });
       it(testConfiguration.testDescription, function(callback) {
+        debug('In test for #Delete - enrollmentForDeleteTest is: ' + JSON.stringify(enrollmentForDeleteTest));
         testConfiguration.deleteFunction(enrollmentForDeleteTest[testConfiguration.idPropertyName], enrollmentForDeleteTest.etag, function(err) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Non null response from the delete.');
-          enrollmentForDeleteTest = {};
           callback();
         });
       });
@@ -206,19 +210,22 @@ describe('Provisioning Service Client: CRUD operations', function () {
 
   testSpecification.forEach(function(testConfiguration) {
     describe('#Update', function() {
-      var enrollmentReturnedFromUpdate = {};
-      var enrollmentToUpdate = {};
+      let enrollmentReturnedFromUpdate = {};
+      let enrollmentToUpdate = {};
       beforeEach(function(done) {
+        debug('in beforeEach of #Update - enrollment to create is: ' + JSON.stringify(testConfiguration.enrollmentObject));
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Should be no error from the create');
+          debug('In beforeEach of #Update - returnedEnrollment is: ' + JSON.stringify(returnedEnrollment));
           enrollmentToUpdate = returnedEnrollment;
           done();
         });
       });
       afterEach(function(done) {
+        debug('In afterEach of #Update - enrollmentReturnedFromUpdate is: ' + JSON.stringify(enrollmentReturnedFromUpdate));
         testConfiguration.deleteFunction(enrollmentReturnedFromUpdate, function(err) {
           if (err) {
             debug(err);
@@ -229,31 +236,38 @@ describe('Provisioning Service Client: CRUD operations', function () {
       });
       it(testConfiguration.testDescription, function(callback) {
         enrollmentToUpdate.provisioningStatus = 'disabled';
+        debug('In test for #Update - enrollmentToUpdate is: ' + JSON.stringify(enrollmentToUpdate));
         testConfiguration.updateFunction(enrollmentToUpdate, function(err, updatedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err);
           assert.equal(updatedEnrollment.provisioningStatus, 'disabled', 'provisioning state not disabled');
+          debug('In test for #Update - updatedEnrollment is: ' + JSON.stringify(updatedEnrollment));
           enrollmentReturnedFromUpdate = updatedEnrollment;
           callback();
         });
       });
     });
+  });
 
+  testSpecification.forEach(function(testConfiguration) {
     describe('#getAttestationMechanism', function () {
-      var enrollmentToVerify = {};
+      let enrollmentToVerify = {};
       beforeEach(function(done) {
+        debug('in beforeEach for #getAttest - enrollmentObject is: ' + JSON.stringify(testConfiguration.enrollmentObject));
         testConfiguration.createFunction(testConfiguration.enrollmentObject, function(err, returnedEnrollment) {
           if (err) {
             debug(err);
           }
           assert.isNull(err, 'Should be no error from the create');
+          debug('In beforeEach for #getAttest - returnedEnrollment is: ' + JSON.stringify(returnedEnrollment));
           enrollmentToVerify = returnedEnrollment;
           done();
         });
       });
       afterEach(function(done) {
+        debug('in afterEach of #getAttest - enrollmentToVerify to be deleted is: ' + JSON.stringify(enrollmentToVerify));
         testConfiguration.deleteFunction(enrollmentToVerify, function(err) {
           if (err) {
             debug(err);
@@ -263,6 +277,7 @@ describe('Provisioning Service Client: CRUD operations', function () {
         });
       });
       it(testConfiguration.testDescription, function(done) {
+        debug('In test of getAttest - enrollmentToVerify is: ' + JSON.stringify(enrollmentToVerify));
         testConfiguration.getAttestationMechanismFunction(enrollmentToVerify[testConfiguration.idPropertyName], function (err, attestationMechanism) {
           if (err) {
             debug(err);
