@@ -10,9 +10,9 @@ phases:
     name: Hosted
   steps:
   - task: NodeTool@0
-    displayName: 'Use Node 10.x'
+    displayName: 'Use Node 8.15.x'
     inputs:
-      versionSpec: 10.x
+      versionSpec: 8.15.x
 
 
   - script: |
