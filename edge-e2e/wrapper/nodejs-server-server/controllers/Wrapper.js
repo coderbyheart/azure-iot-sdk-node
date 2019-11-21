@@ -3,8 +3,8 @@
 var utils = require('../utils/writer.js');
 var Wrapper = require('../service/WrapperService');
 
-module.exports.wrapperCleanupPUT = function wrapperCleanupPUT (req, res, next) {
-  Wrapper.wrapperCleanupPUT()
+module.exports.wrapper_Cleanup = function wrapper_Cleanup (req, res, next) {
+  Wrapper.wrapper_Cleanup()
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -13,9 +13,19 @@ module.exports.wrapperCleanupPUT = function wrapperCleanupPUT (req, res, next) {
     });
 };
 
-module.exports.wrapperMessagePUT = function wrapperMessagePUT (req, res, next) {
+module.exports.wrapper_GetCapabilities = function wrapper_GetCapabilities (req, res, next) {
+  Wrapper.wrapper_GetCapabilities()
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.wrapper_LogMessage = function wrapper_LogMessage (req, res, next) {
   var msg = req.swagger.params['msg'].value;
-  Wrapper.wrapperMessagePUT(msg)
+  Wrapper.wrapper_LogMessage(msg)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -24,8 +34,9 @@ module.exports.wrapperMessagePUT = function wrapperMessagePUT (req, res, next) {
     });
 };
 
-module.exports.wrapperSessionGET = function wrapperSessionGET (req, res, next) {
-  Wrapper.wrapperSessionGET()
+module.exports.wrapper_SendCommand = function wrapper_SendCommand (req, res, next) {
+  var cmd = req.swagger.params['cmd'].value;
+  Wrapper.wrapper_SendCommand(cmd)
     .then(function (response) {
       utils.writeJson(res, response);
     })
@@ -34,8 +45,9 @@ module.exports.wrapperSessionGET = function wrapperSessionGET (req, res, next) {
     });
 };
 
-module.exports.wrapperSessionPUT = function wrapperSessionPUT (req, res, next) {
-  Wrapper.wrapperSessionPUT()
+module.exports.wrapper_SetFlags = function wrapper_SetFlags (req, res, next) {
+  var flags = req.swagger.params['flags'].value;
+  Wrapper.wrapper_SetFlags(flags)
     .then(function (response) {
       utils.writeJson(res, response);
     })
