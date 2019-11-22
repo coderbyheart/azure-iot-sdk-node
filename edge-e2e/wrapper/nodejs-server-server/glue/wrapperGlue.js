@@ -87,10 +87,10 @@ exports.wrapper_GetCapabilities = function() {
  **/
 exports.wrapper_LogMessage = function(msg) {
   return new Promise(function(resolve, reject) {
-    if (message.message) {
-      debug(message.message);
+    if (msg.message) {
+      debug(msg.message);
     } else {
-      debug(message);
+      debug(msg);
     }
     resolve();
   });
