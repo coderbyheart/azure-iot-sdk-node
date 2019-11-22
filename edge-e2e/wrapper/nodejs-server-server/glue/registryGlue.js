@@ -23,17 +23,6 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.registry_Connect = function(connectionString) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "connectionId" : "connectionId"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -45,9 +34,6 @@ exports.registry_Connect = function(connectionString) {
  * no response value expected for this operation
  **/
 exports.registry_Disconnect = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -59,15 +45,6 @@ exports.registry_Disconnect = function(connectionId) {
  * returns Object
  **/
 exports.registry_GetDeviceTwin = function(connectionId,deviceId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -80,15 +57,6 @@ exports.registry_GetDeviceTwin = function(connectionId,deviceId) {
  * returns Object
  **/
 exports.registry_GetModuleTwin = function(connectionId,deviceId,moduleId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -101,9 +69,6 @@ exports.registry_GetModuleTwin = function(connectionId,deviceId,moduleId) {
  * no response value expected for this operation
  **/
 exports.registry_PatchDeviceTwin = function(connectionId,deviceId,props) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -117,8 +82,5 @@ exports.registry_PatchDeviceTwin = function(connectionId,deviceId,props) {
  * no response value expected for this operation
  **/
 exports.registry_PatchModuleTwin = function(connectionId,deviceId,moduleId,props) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 

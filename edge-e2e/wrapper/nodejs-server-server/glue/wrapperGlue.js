@@ -53,9 +53,6 @@ var cleanupGlueModule = function(mod, callback) {
  * no response value expected for this operation
  **/
 exports.wrapper_Cleanup = function() {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -66,13 +63,7 @@ exports.wrapper_Cleanup = function() {
  **/
 exports.wrapper_GetCapabilities = function() {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    resolve();
   });
 }
 
@@ -84,9 +75,6 @@ exports.wrapper_GetCapabilities = function() {
  * no response value expected for this operation
  **/
 exports.wrapper_LogMessage = function(msg) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 

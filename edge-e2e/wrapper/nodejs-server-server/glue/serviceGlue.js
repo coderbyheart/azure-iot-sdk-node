@@ -22,17 +22,6 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.service_Connect = function(connectionString) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "connectionId" : "connectionId"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -44,9 +33,6 @@ exports.service_Connect = function(connectionString) {
  * no response value expected for this operation
  **/
 exports.service_Disconnect = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -59,15 +45,6 @@ exports.service_Disconnect = function(connectionId) {
  * returns Object
  **/
 exports.service_InvokeDeviceMethod = function(connectionId,deviceId,methodInvokeParameters) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -81,15 +58,6 @@ exports.service_InvokeDeviceMethod = function(connectionId,deviceId,methodInvoke
  * returns Object
  **/
 exports.service_InvokeModuleMethod = function(connectionId,deviceId,moduleId,methodInvokeParameters) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -101,8 +69,5 @@ exports.service_InvokeModuleMethod = function(connectionId,deviceId,moduleId,met
  * no response value expected for this operation
  **/
 exports.service_SendC2d = function(connectionId,eventBody) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 

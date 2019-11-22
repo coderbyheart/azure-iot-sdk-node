@@ -22,17 +22,6 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.device_Connect = function(transportType,connectionString,caCertificate) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "connectionId" : "connectionId"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -43,9 +32,6 @@ exports.device_Connect = function(transportType,connectionString,caCertificate) 
  * no response value expected for this operation
  **/
 exports.device_Connect2 = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -58,17 +44,6 @@ exports.device_Connect2 = function(connectionId) {
  * returns connectResponse
  **/
 exports.device_CreateFromConnectionString = function(transportType,connectionString,caCertificate) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "connectionId" : "connectionId"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -80,17 +55,6 @@ exports.device_CreateFromConnectionString = function(transportType,connectionStr
  * returns connectResponse
  **/
 exports.device_CreateFromX509 = function(transportType,x509) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "connectionId" : "connectionId"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -101,9 +65,6 @@ exports.device_CreateFromX509 = function(transportType,x509) {
  * no response value expected for this operation
  **/
 exports.device_Destroy = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -114,9 +75,6 @@ exports.device_Destroy = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_Disconnect = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -127,9 +85,6 @@ exports.device_Disconnect = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_Disconnect2 = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -140,9 +95,6 @@ exports.device_Disconnect2 = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableC2dMessages = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -153,9 +105,6 @@ exports.device_EnableC2dMessages = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableMethods = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -166,9 +115,6 @@ exports.device_EnableMethods = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableTwin = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -179,14 +125,6 @@ exports.device_EnableTwin = function(connectionId) {
  * returns String
  **/
 exports.device_GetConnectionStatus = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -197,15 +135,6 @@ exports.device_GetConnectionStatus = function(connectionId) {
  * returns Object
  **/
 exports.device_GetTwin = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -217,9 +146,6 @@ exports.device_GetTwin = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_PatchTwin = function(connectionId,props) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -231,9 +157,6 @@ exports.device_PatchTwin = function(connectionId,props) {
  * no response value expected for this operation
  **/
 exports.device_Reconnect = function(connectionId,forceRenewPassword) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
