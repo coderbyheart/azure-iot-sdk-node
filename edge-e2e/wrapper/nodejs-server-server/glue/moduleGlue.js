@@ -1,4 +1,60 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 'use strict';
+/*jshint esversion: 6 */
+
+var ModuleClient = require('azure-iot-device').ModuleClient;
+var Message = require('azure-iot-device').Message;
+var debug = require('debug')('azure-iot-e2e:node')
+var glueUtils = require('./glueUtils');
+var NamedObjectCache = require('./NamedObjectCache');
+
+/**
+ * cache of objects.  Used to return object by name to the caller.
+ */
+var objectCache = new NamedObjectCache();
+
+/**
+ * Create an event handler which calls the callback for the second event only.  Used
+ * like EventEmitter.Once(), only it returns the second event and then removes itself.
+ * This is needed for 'properties.desired' events because the first event comes when
+ * registering for the hander, but in many cases, we want the second event which is
+ * an actual delta.
+ *
+ * @param {Object} object     EventEmitter object for the event that we're registering for
+ * @param {string} eventName  Name of the event that we're registering for
+ * @param {function} cb       Callback to call when the second event is received.
+ */
+var callbackForSecondEventOnly = function(object, eventName, cb) {
+  var alreadyReceivedFirstEvent = false;
+  var handler = function(x) {
+    if (alreadyReceivedFirstEvent) {
+      object.removeListener(eventName, handler);
+      cb(x);
+    } else {
+      alreadyReceivedFirstEvent = true;
+    }
+  }
+  object.on(eventName, handler);
+}
+
+/**
+ * Helper function which either creates a Twin or returns a Twin for the given connection
+ * if it already exists.
+ *
+ * @param {string} connectionId   Connection to get the twin for
+ * @param {function} callback     callback used to return the Twin object
+ */
+var getModuleOrDeviceTwin = function(connectionId, callback) {
+  var client = objectCache.getObject(connectionId);
+  // cheat: use internal member.  We should really call getTwin the first time
+  // and cache the value in this code rather than relying on internal implementations.
+  if (client._twin) {
+    callback(null, client._twin);
+  } else {
+    client.getTwin(callback);
+  }
+}
 
 
 /**

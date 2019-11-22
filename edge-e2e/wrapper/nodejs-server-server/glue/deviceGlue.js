@@ -1,5 +1,17 @@
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
 'use strict';
+/*jshint esversion: 6 */
 
+var Client = require('azure-iot-device').Client;
+var debug = require('debug')('azure-iot-e2e:node')
+var glueUtils = require('./glueUtils');
+var NamedObjectCache = require('./NamedObjectCache');
+
+/**
+ * cache of objects.  Used to return object by name to the caller.
+ */
+var objectCache = new NamedObjectCache();
 
 /**
  * Connect to the azure IoT Hub as a device
