@@ -234,9 +234,9 @@ exports.device_Reconnect = function(connectionId,forceRenewPassword) {
  * no response value expected for this operation
  **/
 exports.device_RoundtripMethodCall = function(connectionId,methodName,requestAndResponse) {
-  debug(`deviceConnectionIdRoundtripMethodCallMethodNamePUT called with ${connectionId}, ${methodName}`);
+  debug(`device_RoundtripMethodCall called with ${connectionId}, ${methodName}`);
   debug(JSON.stringify(requestAndResponse, null, 2));
-  return glueUtils.makePromise('deviceConnectionIdRoundtripMethodCallMethodNamePUT', function(callback) {
+  return glueUtils.makePromise('device_RoundtripMethodCall', function(callback) {
     var client = objectCache.getObject(connectionId);
     client.onDeviceMethod(methodName, function(request, response) {
       debug(`function ${methodName} invoked from service`);

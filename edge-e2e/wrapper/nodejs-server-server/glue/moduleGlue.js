@@ -183,8 +183,8 @@ exports.module_Destroy = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_Disconnect = function(connectionId) {
-  debug(`moduleConnectionIdDisconnectPUT called with ${connectionId}`);
-  return glueUtils.makePromise('moduleConnectionIdDisconnectPUT', function(callback) {
+  debug(`module_Disconnect called with ${connectionId}`);
+  return glueUtils.makePromise('module_Disconnect', function(callback) {
     var client = objectCache.removeObject(connectionId);
     if (!client) {
       debug(`${connectionId} already closed.`);
@@ -279,8 +279,8 @@ exports.module_GetConnectionStatus = function(connectionId) {
  * returns Object
  **/
 exports.module_GetTwin = function(connectionId) {
-  debug(`moduleConnectionIdTwinGET called with ${connectionId}`);
-  return glueUtils.makePromise('moduleConnectionIdTwinGET', function(callback) {
+  debug(`module_GetTwin called with ${connectionId}`);
+  return glueUtils.makePromise('module_GetTwin', function(callback) {
     getModuleOrDeviceTwin(connectionId, function(err, twin) {
       glueUtils.debugFunctionResult('getModuleOrDeviceTwin', err);
       if (err) {
@@ -304,7 +304,7 @@ exports.module_GetTwin = function(connectionId) {
 exports.module_InvokeDeviceMethod = function(connectionId,deviceId,methodInvokeParameters) {
   debug(`module_InvokeDeviceMethod called with ${connectionId}, ${deviceId}`);
   debug(JSON.stringify(methodInvokeParameters));
-  return glueUtils.makePromise('moduleConnectionIdDeviceMethodDeviceIdPUT', function(callback) {
+  return glueUtils.makePromise('module_InvokeDeviceMethod', function(callback) {
     var client = objectCache.getObject(connectionId);
     debug(`calling ModuleClient.invokeMethod`);
     client.invokeMethod(deviceId, methodInvokeParameters, function(err, result) {
