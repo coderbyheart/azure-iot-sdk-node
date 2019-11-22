@@ -22,6 +22,27 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.device_Connect = function(transportType,connectionString,caCertificate) {
+  debug(`device_Connect called with transport ${transportType}`);
+  return glueUtils.makePromise('device_Connect', function(callback) {
+    var client = Client.fromConnectionString(connectionString, glueUtils.transportFromType(transportType));
+    glueUtils.setOptionalCert(client, caCertificate, function(err) {
+      glueUtils.debugFunctionResult('glueUtils.setOptionalCert', err);
+      if (err) {
+        callback(err);
+      } else {
+        debug('calling client.open');
+        client.open(function(err) {
+          glueUtils.debugFunctionResult('client.open', err);
+          if (err) {
+            callback(err);
+          } else {
+            var connectionId = objectCache.addObject('DeviceClient', client);
+            callback(null, {connectionId: connectionId});
+          }
+        });
+      }
+    });
+  });
 }
 
 
@@ -32,6 +53,9 @@ exports.device_Connect = function(transportType,connectionString,caCertificate) 
  * no response value expected for this operation
  **/
 exports.device_Connect2 = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -44,6 +68,9 @@ exports.device_Connect2 = function(connectionId) {
  * returns connectResponse
  **/
 exports.device_CreateFromConnectionString = function(transportType,connectionString,caCertificate) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -55,6 +82,9 @@ exports.device_CreateFromConnectionString = function(transportType,connectionStr
  * returns connectResponse
  **/
 exports.device_CreateFromX509 = function(transportType,x509) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -65,6 +95,9 @@ exports.device_CreateFromX509 = function(transportType,x509) {
  * no response value expected for this operation
  **/
 exports.device_Destroy = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -75,6 +108,20 @@ exports.device_Destroy = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_Disconnect = function(connectionId) {
+  debug(`device_Disconnect called with ${connectionId}`);
+  return glueUtils.makePromise('device_Disconnect', function(callback) {
+    var client = objectCache.removeObject(connectionId);
+    if (!client) {
+      debug(`${connectionId} already closed.`);
+      callback();
+    } else {
+      debug('calling client.close');
+      client.close(function(err) {
+        glueUtils.debugFunctionResult('client.close', err);
+        callback(err);
+      });
+    }
+  });
 }
 
 
@@ -85,6 +132,9 @@ exports.device_Disconnect = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_Disconnect2 = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -105,6 +155,14 @@ exports.device_EnableC2dMessages = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableMethods = function(connectionId) {
+  debug(`device_EnableMethods called with ${connectionId}`);
+  return glueUtils.makePromise('device_EnableMethods', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client._enableMethods(function(err) {
+      glueUtils.debugFunctionResult('client._enableMethods', err);
+      callback(err);
+    });
+  });
 }
 
 
@@ -125,6 +183,9 @@ exports.device_EnableTwin = function(connectionId) {
  * returns String
  **/
 exports.device_GetConnectionStatus = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -157,6 +218,9 @@ exports.device_PatchTwin = function(connectionId,props) {
  * no response value expected for this operation
  **/
 exports.device_Reconnect = function(connectionId,forceRenewPassword) {
+  return new Promise(function(resolve, reject) {
+    resolve();
+  });
 }
 
 
@@ -170,8 +234,29 @@ exports.device_Reconnect = function(connectionId,forceRenewPassword) {
  * no response value expected for this operation
  **/
 exports.device_RoundtripMethodCall = function(connectionId,methodName,requestAndResponse) {
-  return new Promise(function(resolve, reject) {
-    resolve();
+  debug(`deviceConnectionIdRoundtripMethodCallMethodNamePUT called with ${connectionId}, ${methodName}`);
+  debug(JSON.stringify(requestAndResponse, null, 2));
+  return glueUtils.makePromise('deviceConnectionIdRoundtripMethodCallMethodNamePUT', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    client.onDeviceMethod(methodName, function(request, response) {
+      debug(`function ${methodName} invoked from service`);
+      debug(JSON.stringify(request, null, 2));
+      if (JSON.stringify(request.payload) !== JSON.stringify(requestAndResponse.requestPayload.payload)) {
+        debug('payload expected:' + JSON.stringify(requestAndResponse.requestPayload.payload));
+        debug('payload received:' + JSON.stringify(request.payload));
+        callback(new Error('request payload did not arrive as expected'))
+      } else {
+        debug('payload received as expected');
+        response.send(requestAndResponse.statusCode, requestAndResponse.responsePayload, function(err) {
+          debug('response sent');
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, requestAndResponse.responsePayload);
+          }
+        });
+      }
+    });
   });
 }
 
@@ -184,9 +269,6 @@ exports.device_RoundtripMethodCall = function(connectionId,methodName,requestAnd
  * no response value expected for this operation
  **/
 exports.device_SendEvent = function(connectionId,eventBody) {
-  return new Promise(function(resolve, reject) {
-    resolve();
-  });
 }
 
 
@@ -197,14 +279,6 @@ exports.device_SendEvent = function(connectionId,eventBody) {
  * returns String
  **/
 exports.device_WaitForC2dMessage = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 
 
@@ -216,12 +290,7 @@ exports.device_WaitForC2dMessage = function(connectionId) {
  **/
 exports.device_WaitForConnectionStatusChange = function(connectionId) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+    resolve();
   });
 }
 
@@ -233,14 +302,5 @@ exports.device_WaitForConnectionStatusChange = function(connectionId) {
  * returns Object
  **/
 exports.device_WaitForDesiredPropertiesPatch = function(connectionId) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = "{}";
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
-  });
 }
 

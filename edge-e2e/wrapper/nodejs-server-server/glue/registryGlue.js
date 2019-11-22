@@ -23,6 +23,12 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.registry_Connect = function(connectionString) {
+  debug(`registry_Connect called`);
+  return glueUtils.makePromise('registry_Connect', function(callback) {
+    var registry = Registry.fromConnectionString(connectionString);
+    var connectionId = objectCache.addObject('registry', registry);
+    callback(null, {connectionId: connectionId});
+  });
 }
 
 
@@ -34,6 +40,17 @@ exports.registry_Connect = function(connectionString) {
  * no response value expected for this operation
  **/
 exports.registry_Disconnect = function(connectionId) {
+  debug(`registry_Disconnect called with ${connectionId}`);
+  return glueUtils.makePromise('registry_Disconnect', function(callback) {
+    var registry = objectCache.removeObject(connectionId);
+    if (!registry) {
+      debug(`${connectionId} already closed.`);
+      callback();
+    } else {
+      debug(`Removed registry for ${connectionId}.`);
+      callback();
+    }
+  });
 }
 
 
@@ -57,6 +74,15 @@ exports.registry_GetDeviceTwin = function(connectionId,deviceId) {
  * returns Object
  **/
 exports.registry_GetModuleTwin = function(connectionId,deviceId,moduleId) {
+  debug(`registry_GetModuleTwin called with ${connectionId}, ${deviceId}, ${moduleId}`);
+  return glueUtils.makePromise('registry_GetModuleTwin', function(callback) {
+    var registry = objectCache.getObject(connectionId);
+    debug(`calling Registry.getModuleTwin`);
+    registry.getModuleTwin(deviceId, moduleId, function(err, result) {
+      glueUtils.debugFunctionResult('registry.getModuleTwin', err);
+      callback(err, result);
+    });
+  });
 }
 
 
@@ -82,5 +108,15 @@ exports.registry_PatchDeviceTwin = function(connectionId,deviceId,props) {
  * no response value expected for this operation
  **/
 exports.registry_PatchModuleTwin = function(connectionId,deviceId,moduleId,props) {
+  debug(`registry_PatchModuleTwin called with ${connectionId}, ${deviceId}, ${moduleId}`);
+  debug(props);
+  return glueUtils.makePromise('registry_PatchModuleTwin', function(callback) {
+    var registry = objectCache.getObject(connectionId);
+    debug(`calling Registry.updateModuleTwin`);
+    registry.updateModuleTwin(deviceId, moduleId, props, '*', function(err, result) {
+      glueUtils.debugFunctionResult('registry.updateModuleTwin', err);
+      callback(err, result);
+    });
+  });
 }
 

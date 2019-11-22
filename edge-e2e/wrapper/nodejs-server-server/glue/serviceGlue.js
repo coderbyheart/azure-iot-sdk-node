@@ -22,6 +22,12 @@ var objectCache = new NamedObjectCache();
  * returns connectResponse
  **/
 exports.service_Connect = function(connectionString) {
+  debug(`service_Connect called`);
+  return glueUtils.makePromise('service_Connect', function(callback) {
+    var serviceClient = ServiceClient.fromConnectionString(connectionString);
+    var connectionId = objectCache.addObject('serviceClient', serviceClient);
+    callback(null, {connectionId: connectionId});
+  });
 }
 
 
@@ -33,6 +39,24 @@ exports.service_Connect = function(connectionString) {
  * no response value expected for this operation
  **/
 exports.service_Disconnect = function(connectionId) {
+  debug(`service_Disconnect called with ${connectionId}`);
+  return glueUtils.makePromise('service_Disconnect', function(callback) {
+    var serviceClient = objectCache.removeObject(connectionId);
+    if (!serviceClient) {
+      debug(`${connectionId} already closed.`);
+      callback();
+    } else {
+      serviceClient.close(function(err) {
+        glueUtils.debugFunctionResult('serviceClient.close', err);
+        if (err) {
+          callback(err);
+        } else {
+          debug(`Removed serviceClient for ${connectionId}.`);
+          callback();
+        }
+      });
+    }
+  });
 }
 
 
@@ -45,6 +69,16 @@ exports.service_Disconnect = function(connectionId) {
  * returns Object
  **/
 exports.service_InvokeDeviceMethod = function(connectionId,deviceId,methodInvokeParameters) {
+  debug(`service_IncokeDeviceMethod called with ${connectionId}, ${deviceId}`);
+  debug(JSON.stringify(methodInvokeParameters));
+  return glueUtils.makePromise('service_IncokeDeviceMethod', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    debug(`calling ServiceClient.invokeDeviceMethod`);
+    client.invokeDeviceMethod(deviceId, methodInvokeParameters, function(err, result) {
+      glueUtils.debugFunctionResult('ServiceClient.invokeDeviceMethod', err);
+      callback(err, result);
+    });
+  });
 }
 
 
@@ -58,6 +92,16 @@ exports.service_InvokeDeviceMethod = function(connectionId,deviceId,methodInvoke
  * returns Object
  **/
 exports.service_InvokeModuleMethod = function(connectionId,deviceId,moduleId,methodInvokeParameters) {
+  debug(`service_InvokeModuleMethod called with ${connectionId}, ${deviceId}, ${moduleId}`);
+  debug(JSON.stringify(methodInvokeParameters));
+  return glueUtils.makePromise('service_InvokeModuleMethod', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    debug(`calling ServiceClient.invokeDeviceMethod`);
+    client.invokeDeviceMethod(deviceId, moduleId, methodInvokeParameters, function(err, result) {
+      glueUtils.debugFunctionResult('ServiceClient.invokeDeviceMethod', err);
+      callback(err, result);
+    });
+  });
 }
 
 

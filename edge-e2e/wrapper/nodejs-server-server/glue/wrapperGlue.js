@@ -53,6 +53,17 @@ var cleanupGlueModule = function(mod, callback) {
  * no response value expected for this operation
  **/
 exports.wrapper_Cleanup = function() {
+  debug('wrapper_Cleanup called')
+  return glueUtils.makePromise('wrapper_Cleanup', function(callback) {
+    var objectsToClean = [
+      moduleGlue,
+      eventHubGlue,
+      serviceGlue,
+      registryGlue,
+      deviceGlue
+    ];
+    async.forEachSeries(objectsToClean, cleanupGlueModule, callback);
+  });
 }
 
 
@@ -75,6 +86,14 @@ exports.wrapper_GetCapabilities = function() {
  * no response value expected for this operation
  **/
 exports.wrapper_LogMessage = function(msg) {
+  return new Promise(function(resolve, reject) {
+    if (message.message) {
+      debug(message.message);
+    } else {
+      debug(message);
+    }
+    resolve();
+  });
 }
 
 

@@ -66,6 +66,28 @@ var getModuleOrDeviceTwin = function(connectionId, callback) {
  * returns connectResponse
  **/
 exports.module_Connect = function(transportType,connectionString,caCertificate) {
+  debug(`module_Connect called`);
+  return glueUtils.makePromise('module_Connect', function(callback) {
+    var client = ModuleClient.fromConnectionString(connectionString, glueUtils.transportFromType(transportType));
+    var connectionId = objectCache.addObject('moduleClient', client);
+    glueUtils.setOptionalCert(client, caCertificate, function(err) {
+      glueUtils.debugFunctionResult('glueUtils.setOptionalCert', err);
+      if (err) {
+        callback(err);
+      } else {
+        debug('calling moduleClient.open');
+        client.open(function(err) {
+          glueUtils.debugFunctionResult('client.open', err);
+          if (err) {
+            objectCache.removeObject(connectionId);
+            callback(err);
+          } else {
+            callback(null, {connectionId: connectionId});
+          }
+        });
+      }
+    });
+  });
 }
 
 
@@ -86,7 +108,29 @@ exports.module_Connect2 = function(connectionId) {
  * returns connectResponse
  **/
 exports.module_ConnectFromEnvironment = function(transportType) {
+  debug(`module_ConnectFromEnvironment called`);
+
+  return glueUtils.makePromise('module_ConnectFromEnvironment', function(callback) {
+    ModuleClient.fromEnvironment(glueUtils.transportFromType(transportType), function(err, client) {
+      glueUtils.debugFunctionResult('ModuleClient.fromEnvironment', err);
+      if (err) {
+        callback(err);
+      } else {
+        debug('calling moduleClient.open');
+        client.open(function(err) {
+          glueUtils.debugFunctionResult('client.open', err);
+          if (err) {
+            callback(err);
+          } else {
+            var connectionId = objectCache.addObject('moduleClient', client);
+            callback(null, {connectionId: connectionId});
+          }
+        });
+      }
+    });
+  });
 }
+
 
 
 /**
@@ -139,6 +183,20 @@ exports.module_Destroy = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_Disconnect = function(connectionId) {
+  debug(`moduleConnectionIdDisconnectPUT called with ${connectionId}`);
+  return glueUtils.makePromise('moduleConnectionIdDisconnectPUT', function(callback) {
+    var client = objectCache.removeObject(connectionId);
+    if (!client) {
+      debug(`${connectionId} already closed.`);
+      callback();
+    } else {
+      debug('calling ModuleClient.close');
+      client.close(function(err) {
+        glueUtils.debugFunctionResult('client.close', err);
+        callback(err);
+      });
+    }
+  });
 }
 
 
@@ -159,6 +217,12 @@ exports.module_Disconnect2 = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_EnableInputMessages = function(connectionId) {
+  debug(`module_EnableInputMessages called with ${connectionId}`);
+  return glueUtils.makePromise('module_EnableInputMessages', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client.on('inputMessage', function() {});
+    callback();
+  });
 }
 
 
@@ -169,6 +233,14 @@ exports.module_EnableInputMessages = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_EnableMethods = function(connectionId) {
+  debug(`module_EnableMethods called with ${connectionId}`);
+  return glueUtils.makePromise('module_EnableMethods', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client._enableMethods(function(err) {
+      glueUtils.debugFunctionResult('client._enableMethods', err);
+      callback(err);
+    });
+  });
 }
 
 
@@ -179,6 +251,14 @@ exports.module_EnableMethods = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_EnableTwin = function(connectionId) {
+  debug(`module_EnableTwin called with ${connectionId}`);
+  return glueUtils.makePromise('module_EnableTwin', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client.getTwin(function(err) {
+      glueUtils.debugFunctionResult('client.getTwin', err);
+      callback(err);
+    });
+  });
 }
 
 
@@ -199,6 +279,17 @@ exports.module_GetConnectionStatus = function(connectionId) {
  * returns Object
  **/
 exports.module_GetTwin = function(connectionId) {
+  debug(`moduleConnectionIdTwinGET called with ${connectionId}`);
+  return glueUtils.makePromise('moduleConnectionIdTwinGET', function(callback) {
+    getModuleOrDeviceTwin(connectionId, function(err, twin) {
+      glueUtils.debugFunctionResult('getModuleOrDeviceTwin', err);
+      if (err) {
+        callback(err);
+      } else {
+        callback(null, {properties: JSON.parse(JSON.stringify(twin.properties))});
+      }
+    });
+  });
 }
 
 
@@ -211,6 +302,16 @@ exports.module_GetTwin = function(connectionId) {
  * returns Object
  **/
 exports.module_InvokeDeviceMethod = function(connectionId,deviceId,methodInvokeParameters) {
+  debug(`module_InvokeDeviceMethod called with ${connectionId}, ${deviceId}`);
+  debug(JSON.stringify(methodInvokeParameters));
+  return glueUtils.makePromise('moduleConnectionIdDeviceMethodDeviceIdPUT', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    debug(`calling ModuleClient.invokeMethod`);
+    client.invokeMethod(deviceId, methodInvokeParameters, function(err, result) {
+      glueUtils.debugFunctionResult('client.invokeMethod', err);
+      callback(err, result);
+    });
+  });
 }
 
 
@@ -224,6 +325,16 @@ exports.module_InvokeDeviceMethod = function(connectionId,deviceId,methodInvokeP
  * returns Object
  **/
 exports.module_InvokeModuleMethod = function(connectionId,deviceId,moduleId,methodInvokeParameters) {
+  debug(`module_InvokeModuleMethod called with ${connectionId}, ${deviceId}, ${moduleId}`);
+  debug(JSON.stringify(methodInvokeParameters));
+  return glueUtils.makePromise('module_InvokeModuleMethod', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    debug(`calling ModuleClient.invokeMethod`);
+    client.invokeMethod(deviceId, moduleId, methodInvokeParameters, function(err, result) {
+      glueUtils.debugFunctionResult('client.invokeMethod', err);
+      callback(err, result);
+    });
+  });
 }
 
 
@@ -235,6 +346,28 @@ exports.module_InvokeModuleMethod = function(connectionId,deviceId,moduleId,meth
  * no response value expected for this operation
  **/
 exports.module_PatchTwin = function(connectionId,props) {
+  debug(`module_PatchTwin for ${connectionId} called with ${JSON.stringify(props)}`);
+  return glueUtils.makePromise('module_PatchTwin', function(callback) {
+    getModuleOrDeviceTwin(connectionId, function(err, twin) {
+      glueUtils.debugFunctionResult('getModuleOrDeviceTwin', err);
+      if (err) {
+        callback(err);
+      } else {
+        try {
+          twin.properties.reported.update(props, function(err) {
+            glueUtils.debugFunctionResult('twin.properties.reported.update', err);
+            if (err) {
+              callback(err);
+            } else {
+              callback();
+            }
+          });
+        } catch (e) {
+          callback(e);
+        }
+      }
+    });
+  });
 }
 
 
@@ -259,6 +392,30 @@ exports.module_Reconnect = function(connectionId,forceRenewPassword) {
  * no response value expected for this operation
  **/
 exports.module_RoundtripMethodCall = function(connectionId,methodName,requestAndResponse) {
+  debug(`module_RoundtripMethodCall called with ${connectionId}, ${methodName}`);
+  debug(JSON.stringify(requestAndResponse, null, 2));
+  return glueUtils.makePromise('module_RoundtripMethodCall', function(callback) {
+    var client = objectCache.getObject(connectionId);
+    client.onMethod(methodName, function(request, response) {
+      debug(`function ${methodName} invoked from service`);
+      debug(JSON.stringify(request, null, 2));
+      if (JSON.stringify(request.payload) !== JSON.stringify(requestAndResponse.requestPayload.payload)) {
+        debug('payload expected:' + JSON.stringify(requestAndResponse.requestPayload.payload));
+        debug('payload received:' + JSON.stringify(request.payload));
+        callback(new Error('request payload did not arrive as expected'))
+      } else {
+        debug('payload received as expected');
+        response.send(requestAndResponse.statusCode, requestAndResponse.responsePayload, function(err) {
+          debug('response sent');
+          if (err) {
+            callback(err);
+          } else {
+            callback(null, requestAndResponse.responsePayload);
+          }
+        });
+      }
+    });
+  });
 }
 
 
@@ -270,6 +427,15 @@ exports.module_RoundtripMethodCall = function(connectionId,methodName,requestAnd
  * no response value expected for this operation
  **/
 exports.module_SendEvent = function(connectionId,eventBody) {
+  debug(`module_SendEvent called with ${connectionId}`);
+  debug(eventBody);
+  return glueUtils.makePromise('module_SendEvent', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client.sendEvent(new Message(eventBody), function(err) {
+      glueUtils.debugFunctionResult('client.sendEvent', err);
+      callback(err);
+    })
+  });
 }
 
 
@@ -282,6 +448,15 @@ exports.module_SendEvent = function(connectionId,eventBody) {
  * no response value expected for this operation
  **/
 exports.module_SendOutputEvent = function(connectionId,outputName,eventBody) {
+  debug(`module_SendOutputEvent called with ${connectionId}, ${outputName}`);
+  debug(eventBody);
+  return glueUtils.makePromise('module_SendOutputEvent', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    client.sendOutputEvent(outputName, new Message(eventBody), function(err, result) {
+      glueUtils.debugFunctionResult('client.sendOutputEvent', err);
+      callback(err, result);
+    });
+  });
 }
 
 
@@ -302,6 +477,18 @@ exports.module_WaitForConnectionStatusChange = function(connectionId) {
  * returns Object
  **/
 exports.module_WaitForDesiredPropertiesPatch = function(connectionId) {
+  debug(`module_WaitForDesiredPropertiesPatch called with ${connectionId}`);
+  return glueUtils.makePromise('module_WaitForDesiredPropertiesPatch', function(callback) {
+    getModuleOrDeviceTwin(connectionId, function(err, twin) {
+      if (err) {
+        callback(err);
+      } else {
+        callbackForSecondEventOnly(twin, 'properties.desired', function(delta) {
+          callback(null, delta);
+        });
+      }
+    });
+  });
 }
 
 
@@ -313,5 +500,27 @@ exports.module_WaitForDesiredPropertiesPatch = function(connectionId) {
  * returns String
  **/
 exports.module_WaitForInputMessage = function(connectionId,inputName) {
+  debug(`module_WaitForInputMessage called with ${connectionId}, ${inputName}`);
+  return glueUtils.makePromise('module_WaitForInputMessage', function(callback) {
+    var client = objectCache.getObject(connectionId)
+    var handler = function(receivedInputName, msg) {
+      if (inputName === '*') {
+        client.complete(msg, function(err) {
+          glueUtils.debugFunctionResult('client.complete', err);
+          callback(null, {
+            inputName: receivedInputName,
+            msg: msg.getBytes().toString('ascii')
+          });
+        });
+      } else if (receivedInputName === inputName) {
+        client.removeListener('inputMessage', handler);
+        client.complete(msg, function(err) {
+          glueUtils.debugFunctionResult('client.complete', err);
+          callback(null, msg.getBytes().toString('ascii'));
+        });
+      }
+    };
+    client.on('inputMessage', handler);
+  });
 }
 
