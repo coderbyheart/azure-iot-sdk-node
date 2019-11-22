@@ -54,7 +54,7 @@ exports.device_Connect = function(transportType,connectionString,caCertificate) 
  **/
 exports.device_Connect2 = function(connectionId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -69,7 +69,7 @@ exports.device_Connect2 = function(connectionId) {
  **/
 exports.device_CreateFromConnectionString = function(transportType,connectionString,caCertificate) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -83,7 +83,7 @@ exports.device_CreateFromConnectionString = function(transportType,connectionStr
  **/
 exports.device_CreateFromX509 = function(transportType,x509) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -96,7 +96,7 @@ exports.device_CreateFromX509 = function(transportType,x509) {
  **/
 exports.device_Destroy = function(connectionId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -133,7 +133,7 @@ exports.device_Disconnect = function(connectionId) {
  **/
 exports.device_Disconnect2 = function(connectionId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -145,6 +145,9 @@ exports.device_Disconnect2 = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableC2dMessages = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -173,6 +176,9 @@ exports.device_EnableMethods = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_EnableTwin = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -196,6 +202,9 @@ exports.device_GetConnectionStatus = function(connectionId) {
  * returns Object
  **/
 exports.device_GetTwin = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -207,6 +216,9 @@ exports.device_GetTwin = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.device_PatchTwin = function(connectionId,props) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -219,7 +231,7 @@ exports.device_PatchTwin = function(connectionId,props) {
  **/
 exports.device_Reconnect = function(connectionId,forceRenewPassword) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -269,6 +281,9 @@ exports.device_RoundtripMethodCall = function(connectionId,methodName,requestAnd
  * no response value expected for this operation
  **/
 exports.device_SendEvent = function(connectionId,eventBody) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -279,6 +294,9 @@ exports.device_SendEvent = function(connectionId,eventBody) {
  * returns String
  **/
 exports.device_WaitForC2dMessage = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -290,7 +308,7 @@ exports.device_WaitForC2dMessage = function(connectionId) {
  **/
 exports.device_WaitForConnectionStatusChange = function(connectionId) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -302,5 +320,8 @@ exports.device_WaitForConnectionStatusChange = function(connectionId) {
  * returns Object
  **/
 exports.device_WaitForDesiredPropertiesPatch = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 

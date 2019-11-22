@@ -113,5 +113,9 @@ exports.service_InvokeModuleMethod = function(connectionId,deviceId,moduleId,met
  * no response value expected for this operation
  **/
 exports.service_SendC2d = function(connectionId,eventBody) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
+
 

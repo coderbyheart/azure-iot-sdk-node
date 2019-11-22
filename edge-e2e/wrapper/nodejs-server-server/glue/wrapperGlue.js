@@ -74,7 +74,7 @@ exports.wrapper_Cleanup = function() {
  **/
 exports.wrapper_GetCapabilities = function() {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -105,7 +105,7 @@ exports.wrapper_LogMessage = function(msg) {
  **/
 exports.wrapper_SendCommand = function(cmd) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 
@@ -118,7 +118,7 @@ exports.wrapper_SendCommand = function(cmd) {
  **/
 exports.wrapper_SetFlags = function(flags) {
   return new Promise(function(resolve, reject) {
-    resolve();
+    glueUtils.returnFailure(reject);
   });
 }
 

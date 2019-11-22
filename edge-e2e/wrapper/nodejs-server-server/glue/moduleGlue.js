@@ -98,6 +98,9 @@ exports.module_Connect = function(transportType,connectionString,caCertificate) 
  * no response value expected for this operation
  **/
 exports.module_Connect2 = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -142,6 +145,9 @@ exports.module_ConnectFromEnvironment = function(transportType) {
  * returns connectResponse
  **/
 exports.module_CreateFromConnectionString = function(transportType,connectionString,caCertificate) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -152,6 +158,9 @@ exports.module_CreateFromConnectionString = function(transportType,connectionStr
  * returns connectResponse
  **/
 exports.module_CreateFromEnvironment = function(transportType) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -163,6 +172,9 @@ exports.module_CreateFromEnvironment = function(transportType) {
  * returns connectResponse
  **/
 exports.module_CreateFromX509 = function(transportType,x509) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -173,6 +185,9 @@ exports.module_CreateFromX509 = function(transportType,x509) {
  * no response value expected for this operation
  **/
 exports.module_Destroy = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -207,6 +222,9 @@ exports.module_Disconnect = function(connectionId) {
  * no response value expected for this operation
  **/
 exports.module_Disconnect2 = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -269,6 +287,9 @@ exports.module_EnableTwin = function(connectionId) {
  * returns String
  **/
 exports.module_GetConnectionStatus = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -379,6 +400,9 @@ exports.module_PatchTwin = function(connectionId,props) {
  * no response value expected for this operation
  **/
 exports.module_Reconnect = function(connectionId,forceRenewPassword) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -467,6 +491,9 @@ exports.module_SendOutputEvent = function(connectionId,outputName,eventBody) {
  * returns String
  **/
 exports.module_WaitForConnectionStatusChange = function(connectionId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 

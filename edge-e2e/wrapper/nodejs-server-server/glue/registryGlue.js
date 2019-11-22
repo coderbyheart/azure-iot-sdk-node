@@ -62,6 +62,9 @@ exports.registry_Disconnect = function(connectionId) {
  * returns Object
  **/
 exports.registry_GetDeviceTwin = function(connectionId,deviceId) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
@@ -95,6 +98,9 @@ exports.registry_GetModuleTwin = function(connectionId,deviceId,moduleId) {
  * no response value expected for this operation
  **/
 exports.registry_PatchDeviceTwin = function(connectionId,deviceId,props) {
+  return new Promise(function(resolve, reject) {
+    glueUtils.returnFailure(reject);
+  });
 }
 
 
