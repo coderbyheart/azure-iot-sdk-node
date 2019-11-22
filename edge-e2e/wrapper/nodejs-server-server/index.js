@@ -7,7 +7,6 @@ var fs = require('fs'),
 var app = require('connect')();
 var swaggerTools = require('swagger-tools');
 var jsyaml = require('js-yaml');
-var _ = require('lodash');
 var serverPort = 8080;
 
 // swaggerRouter configuration
@@ -29,8 +28,8 @@ var toCamel = function(s) {
 // operationId values in the yaml are PascalCased, but the code generator
 // gave us functions that are camelCased.  Fix this up.
 var paths = swaggerDoc.paths
-_.forEach(Object.keys(paths), function(path) {
-  _.forEach(['get', 'put', 'post', 'patch'], function(verb) {
+Object.keys(paths).forEach(function(path) {
+  ['get', 'put', 'post', 'patch'].forEach(function(verb) {
     if (paths[path][verb] && paths[path][verb].operationId) {
       paths[path][verb].operationId = toCamel(paths[path][verb].operationId);
     }
@@ -38,13 +37,13 @@ _.forEach(Object.keys(paths), function(path) {
 }); 
 
 // various yaml fixes to make things work.  
-console.assert(paths['/device/{connectionId}/event'].put.parameters[1].name == 'eventBody');
+console.assert(paths['/device/{connectionId}/event'].put.parameters[1].name === 'eventBody');
 paths['/device/{connectionId}/event'].put.parameters[1].schema.type = 'string'
 
-console.assert(paths['/module/{connectionId}/event'].put.parameters[1].name == 'eventBody');
+console.assert(paths['/module/{connectionId}/event'].put.parameters[1].name === 'eventBody');
 paths['/module/{connectionId}/event'].put.parameters[1].schema.type = 'string'
 
-console.assert(paths['/module/{connectionId}/outputEvent/{outputName}'].put.parameters[2].name == 'eventBody');
+console.assert(paths['/module/{connectionId}/outputEvent/{outputName}'].put.parameters[2].name === 'eventBody');
 paths['/module/{connectionId}/outputEvent/{outputName}'].put.parameters[2].schema.type = 'string'
 
 // Initialize the Swagger middleware
