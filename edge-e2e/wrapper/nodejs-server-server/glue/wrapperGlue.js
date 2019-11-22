@@ -7,7 +7,6 @@ var async = require('async');
 var debug = require('debug')('azure-iot-e2e:node')
 var glueUtils = require('./glueUtils');
 var moduleGlue = require('./moduleGlue');
-var eventHubGlue = require('./eventHubGlue');
 var registryGlue = require('./registryGlue');
 var serviceGlue = require('./serviceGlue');
 var deviceGlue = require('./deviceGlue');
@@ -57,7 +56,6 @@ exports.wrapper_Cleanup = function() {
   return glueUtils.makePromise('wrapper_Cleanup', function(callback) {
     var objectsToClean = [
       moduleGlue,
-      eventHubGlue,
       serviceGlue,
       registryGlue,
       deviceGlue
